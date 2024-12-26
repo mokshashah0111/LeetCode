@@ -5,9 +5,7 @@ public:
             if(sum == target) count++;
             return;
         }
-        // sum += nums[index];
         targetHelper(nums, target, index+1, sum+nums[index], count);
-        // sum -= nums[index];
         nums[index] = -nums[index];
         targetHelper(nums, target, index+1, sum+nums[index], count);
     }
