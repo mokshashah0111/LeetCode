@@ -1,18 +1,17 @@
 class Solution {
 public:
-    void targetHelper(vector<int>& nums, int target, int index, int sum, int& count){
+    void targetHelper(vector<int>& nums, int target, int index, int& count){
         if(index == nums.size()){
-            if(sum == target) count++;
+            if(target == 0) count++;
             return;
         }
-        targetHelper(nums, target, index+1, sum+nums[index], count);
+        targetHelper(nums, target-nums[index], index+1, count);
         nums[index] = -nums[index];
-        targetHelper(nums, target, index+1, sum+nums[index], count);
+        targetHelper(nums, target-nums[index], index+1, count);
     }
     int findTargetSumWays(vector<int>& nums, int target) {
-        int sum = 0;
         int count = 0;
-        targetHelper(nums, target, 0, sum, count);
+        targetHelper(nums, target, 0, count);
         return count;
     }
 };
