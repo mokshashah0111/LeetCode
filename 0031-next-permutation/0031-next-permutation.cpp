@@ -1,13 +1,23 @@
 class Solution {
 public:
     void nextPermutation(vector<int>& nums) {
-        int i = nums.size()-2;
-        while(i>=0 && nums[i] >= nums[i+1])i--;
-        if(i>=0){
-            int j = nums.size()-1;
-            while(nums[j]<=nums[i])j--;
-            swap(nums[i], nums[j]);
+        int index = -1;
+        for(int i = nums.size()-2; i>=0;i--){
+            if(nums[i] < nums[i+1]){
+                index = i;
+                break;
+            }
         }
-        std::reverse(nums.begin()+i+1, nums.end());
+        if(index == -1){
+            reverse(nums.begin(),nums.end());
+            return;
+        }
+        for(int i = nums.size()-1;i>=0;i--){
+            if(nums[i] > nums[index]){
+                swap(nums[i],nums[index]);
+                break;
+            }
+        }
+        reverse(nums.begin()+index+1,nums.end());
     }
 };
