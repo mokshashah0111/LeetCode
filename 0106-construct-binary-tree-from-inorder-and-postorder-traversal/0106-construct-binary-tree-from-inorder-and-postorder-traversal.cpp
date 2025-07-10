@@ -1,21 +1,45 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
 class Solution {
-public:
-    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
-        if (inorder.empty() || postorder.empty()) return nullptr;
+    private:
+    TreeNode* treeHelper(vector<int>& inorder, int inorder_start, int inorder_end, vector<int>& postorder, int postorder_start, int postorder_end, unordered_map<int,int>& nodeToInorder){
 
-        TreeNode* root = new TreeNode(postorder.back());
-        postorder.pop_back();
+        if(postorder_end <= postorder_start || inorder_end <= inorder_start) return nullptr;
 
-        int rootIndex = find(inorder.begin(), inorder.end(), root->val) - inorder.begin();
-        vector<int> left_inorder(inorder.begin(), inorder.begin() + rootIndex);
-        vector<int> right_inorder(inorder.begin() + rootIndex + 1, inorder.end());
+        int rootVal = postorder[postorder_end - 1];
+        TreeNode* root = new TreeNode(rootVal);
 
-        vector<int> left_postorder(postorder.begin(), postorder.begin() + left_inorder.size());
-        vector<int> right_postorder(postorder.begin() + left_inorder.size(), postorder.end());
+        int rootIndex = nodeToInorder[rootVal];
+        int left_subtree_size = rootIndex - inorder_start;
 
-        root->left = buildTree(left_inorder, left_postorder);
-        root->right = buildTree(right_inorder, right_postorder);
+         root->left = treeHelper(inorder, inorder_start, rootIndex,
+                                postorder, postorder_start, postorder_start + left_subtree_size,
+                                nodeToInorder);
+
+        root->right = treeHelper(inorder, rootIndex + 1, inorder_end,
+                                 postorder, postorder_start + left_subtree_size, postorder_end - 1,
+                                 nodeToInorder);;
 
         return root;
+    }
+public:
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+        unordered_map<int,int>nodeToInorder;
+
+        for(int i=0;i<inorder.size();i++){
+            nodeToInorder[inorder[i]] = i;
+        }
+
+        return treeHelper(inorder,0,inorder.size(),postorder,0, postorder.size(), nodeToInorder);
+
     }
 };
