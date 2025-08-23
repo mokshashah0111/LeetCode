@@ -9,24 +9,46 @@
  * };
  */
 class Solution {
+    ListNode* Merge(ListNode* a, ListNode* b){
+        if(!a) return b;
+        if(!b) return a;
+
+        if(a->val < b->val){
+            a->next =Merge(a->next,b);
+            return a;
+        }
+        else{
+            b->next = Merge(a,b->next);
+            return b;
+        }
+        return nullptr;
+    }
+
+    ListNode* split(ListNode* head){
+        
+        ListNode* slow = head;
+        ListNode* fast = head;
+
+        while(fast && fast->next){
+            fast = fast->next->next;
+            if(fast){
+                slow = slow->next;
+            }
+        }
+
+        ListNode* temp = slow->next;
+        slow->next = nullptr;
+
+        return temp;   
+    }
+
 public:
     ListNode* sortList(ListNode* head) {
-        priority_queue<ListNode*, vector<ListNode*>, function<bool(ListNode*,ListNode*)>>heap([](ListNode* a, ListNode* b){return a->val > b->val;});
-        auto current = head;
-        while(current){
-            heap.push(current);
-            current = current->next;
-        }
-        auto dummy = new ListNode(0);
-        auto iter = dummy;
-        while(!heap.empty()){
-            auto node = heap.top();
-            heap.pop();
+        if(!head || !head->next) return head;
 
-            iter->next = node;
-            iter = iter->next;
-        }
-        iter->next = nullptr;
-        return dummy->next;
+        ListNode* second = split(head);
+        head = sortList(head);
+        second = sortList(second);
+        return Merge(head, second);        
     }
 };
