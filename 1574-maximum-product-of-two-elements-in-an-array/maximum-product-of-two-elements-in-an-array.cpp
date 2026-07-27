@@ -1,16 +1,18 @@
 class Solution {
 public:
     int maxProduct(vector<int>& nums) {
-        priority_queue<int>product;
-        int maxProduct = INT_MIN;
-        for(int i=0; i<nums.size()-1;i++){
-            for(int j=1;j<nums.size();j++){
-                if(i==j) continue;
-                // product.push((nums[i]-1)* (nums[j]-1));
-                maxProduct = max(maxProduct, (nums[i]-1)*(nums[j]-1));
+        int max1 = INT_MIN;
+        int max2 = INT_MIN;
+
+        for(int element: nums){
+            if(max1 < element){
+                max2 = max1;
+                max1 = element;
+            }
+            else if(max2==INT_MIN || (element<=max1 && element>max2)){
+                max2 = element;
             }
         }
-        return maxProduct;
-        // return product.top();
+        return (max1-1)*(max2-1);
     }
 };
