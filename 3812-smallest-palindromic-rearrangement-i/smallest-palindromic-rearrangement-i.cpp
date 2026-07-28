@@ -2,25 +2,23 @@ class Solution {
 public:
     string smallestPalindrome(string s) {
         int size = s.size();
-        map<char,int>freq;
-
+        vector<int>freq(26,0);
         for(char c: s){
-            freq[c]++;
+            freq[c-97]++;
         }
-        int start = 0;
+        int start =0;
         int end = size-1;
-
-        for(auto element : freq){
-            char c = element.first;
-            int count =  element.second;
-            cout<< c<<','<<count<<endl;
-            if(count %2 !=0 && size%2 !=0){
-                s[size/2] = c;
+        
+        for(int i =0; i<26;i++){
+            int count = freq[i];
+            if(count==0) continue;
+            if(count%2 !=0 ){
+                s[size/2]= static_cast<char>(i+97);
                 count--;
             }
             while(count){
-                s[start] = c;
-                s[end] =c;
+                s[start] = static_cast<char>(i+97);
+                s[end]= static_cast<char>(i+97);
                 start++;
                 end--;
                 count-=2;
