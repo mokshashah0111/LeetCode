@@ -14,20 +14,13 @@ public:
         if(!head) return nullptr;
         ListNode* current= head;
         ListNode* newHead = new ListNode(0);
-        ListNode* prev = current;
-
-        int val = current->val;
         newHead->next = current;
-        current = current->next;
-
+        
         while(current){
-            if(current->val != val){
-                prev->next = new ListNode(current->val);
-                prev = prev->next;
-                val = current->val;
+            while(current->next && current->next->val == current->val){
+                current->next = current->next->next ? current->next->next : nullptr;
             }
-            else prev->next = nullptr;
-            current= current->next;
+            current = current->next;
         }
         return newHead->next;
     }
