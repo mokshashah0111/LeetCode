@@ -23,17 +23,7 @@ public:
         int minDist = INT_MAX;
 
         while(temp->next){
-            if(temp->val < prev->val && temp->val < temp->next->val){
-                if(firstCritical == -1){
-                    firstCritical = nodeCount;
-                    currCritical = nodeCount;
-                }
-                else{
-                    prevCritical = currCritical;
-                    currCritical = nodeCount;
-                }
-            }
-            else if(temp->val > prev->val && temp->val > temp->next->val){
+            if((temp->val < prev->val && temp->val < temp->next->val) || (temp->val > prev->val && temp->val > temp->next->val)){
                 if(firstCritical == -1){
                     firstCritical = nodeCount;
                     currCritical = nodeCount;
