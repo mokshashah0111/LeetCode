@@ -11,30 +11,47 @@
 class Solution {
 public:
     vector<int> nodesBetweenCriticalPoints(ListNode* head) {
-        if(!head) return {-1,-1};
         if(!head->next->next) return {-1,-1};
-        vector<int>criticals;
+        int nodeCount =2;
+        int firstCritical = -1;
+        int prevCritical = -1;
+        int currCritical = -1;
+
         ListNode* temp = head;
         ListNode* prev = temp;
-        int nodecount =2;
-        temp = temp->next;
+        temp =temp->next;
+        int minDist = INT_MAX;
+
         while(temp->next){
             if(temp->val < prev->val && temp->val < temp->next->val){
-                criticals.emplace_back(nodecount);
+                if(firstCritical == -1){
+                    firstCritical = nodeCount;
+                    currCritical = nodeCount;
+                }
+                else{
+                    prevCritical = currCritical;
+                    currCritical = nodeCount;
+                }
             }
             else if(temp->val > prev->val && temp->val > temp->next->val){
-                criticals.emplace_back(nodecount);
+                if(firstCritical == -1){
+                    firstCritical = nodeCount;
+                    currCritical = nodeCount;
+                }
+                else{
+                    prevCritical = currCritical;
+                    currCritical = nodeCount;
+                }
+            }
+            if(prevCritical != -1 && currCritical != -1){
+                minDist = min(minDist, currCritical-prevCritical);
             }
             prev = temp;
             temp = temp->next;
-            nodecount++;
+            nodeCount++;
         }
-        if(criticals.size() <=1) return {-1,-1};
-        int minDist = INT_MAX;
-        for(int i=1;i<criticals.size();i++){
-            minDist = min(minDist,criticals[i]-criticals[i-1]);
-        }
-        int maxDist = criticals[criticals.size()-1] - criticals[0];
-        return {minDist,maxDist};
+        if(minDist == INT_MAX) return {-1,-1};
+        int maxDist = currCritical - firstCritical;
+        return {minDist, maxDist};
     }
 };
